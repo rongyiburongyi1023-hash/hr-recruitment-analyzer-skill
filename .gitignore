@@ -1,0 +1,22 @@
+# Sensitive local configuration
+.env
+.env.*
+*.key
+*.pem
+*.p12
+*.pfx
+
+# Editor and operating-system files
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db
+Desktop.ini
+*.swp
+*~
+
+# Local temporary files
+tmp/
+temp/
+*.tmp
+*.log
