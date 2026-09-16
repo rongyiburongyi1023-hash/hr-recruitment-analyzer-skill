@@ -2,6 +2,9 @@
 
 **中文名称：AI 招聘分析助手技能包**
 
+- **当前版本：** v0.1.0
+- **项目状态：** 实验性开源 Skill，面向学习、研究和招聘工作辅助，不宣称生产可用。
+
 ## 项目介绍
 
 面向 HR、招聘人员及人力资源专业学生的 AI Agent Skill，用于把岗位需求转化为可执行、可评估的招聘材料。本项目聚焦岗位分析、招聘 JD 优化、结构化面试设计和候选人评价标准设计，不包含前端、后端、数据库或外部 API。
@@ -13,6 +16,24 @@
 招聘工作常见的问题不是缺少文字，而是缺少一致的分析框架：用人需求表达模糊、JD 与业务目标脱节、面试问题无法验证能力、不同面试官评价尺度不一。通用对话提示容易遗漏关键约束，也难以形成可复用的招聘资产。
 
 本 Skill 将招聘流程中的关键判断拆解为标准化步骤，并明确输入、证据、输出和风险提示，使 AI Agent 的结果更接近专业 HR 工作底稿，而不是泛化的文案生成。
+
+## 设计理念
+
+### Skill、Prompt 与 Template 分层
+
+- [`SKILL.md`](SKILL.md) 定义适用范围、任务路由、统一工作流程和安全边界，是 AI Agent 的入口。
+- [`prompts/`](prompts/) 按岗位分析、JD 优化、面试设计和候选人评价拆分专业分析方法，让 Agent 只读取当前任务所需的指引。
+- [`templates/`](templates/) 将分析结果落到 HR 可复核、可协作的工作文档中，避免输出停留在泛化建议。
+
+这种分层方式将通用规则与具体任务细节分开，便于维护，也减少 Agent 在单次任务中读取无关内容。
+
+### 连接业务目标、岗位能力和评价证据
+
+项目使用“业务目标 → 关键产出 → 核心职责 → 能力与资格 → 评价证据”的分析链路。每项任职要求应能追溯到真实工作任务，每项面试评价也应有可观察的行为或结果证据，避免用主观印象替代岗位判断。
+
+### 处理信息不足和隐私风险
+
+当输入不完整时，Skill 要求区分已知事实、合理假设和待确认项，不自行补造薪酬、绩效指标或候选人经历。处理候选人材料时，只使用与岗位相关且已提供的证据，并避免收集、推断或输出无关敏感信息。所有结果均应由 HR 或用人负责人复核。
 
 ## 解决的 HR 招聘问题
 
@@ -35,12 +56,12 @@
 
 | 功能 | 入口 | 主要产出 |
 | --- | --- | --- |
-| 岗位分析 | `prompts/job_analysis.md` | 岗位画像、职责、任职资格、能力模型、待确认项 |
-| JD 优化 | `prompts/jd_optimizer.md` | 问题诊断、优化版 JD、修改说明、合规提醒 |
-| 面试设计 | `prompts/interview_generator.md` | 面试结构、问题库、追问、评价要点、红旗信号 |
-| 候选人评价 | `prompts/candidate_evaluation.md` | 证据矩阵、维度评分、风险与建议 |
+| 岗位分析 | [`prompts/job_analysis.md`](prompts/job_analysis.md) | 岗位画像、职责、任职资格、能力模型、待确认项 |
+| JD 优化 | [`prompts/jd_optimizer.md`](prompts/jd_optimizer.md) | 问题诊断、优化版 JD、修改说明、合规提醒 |
+| 面试设计 | [`prompts/interview_generator.md`](prompts/interview_generator.md) | 面试结构、问题库、追问、评价要点、红旗信号 |
+| 候选人评价 | [`prompts/candidate_evaluation.md`](prompts/candidate_evaluation.md) | 证据矩阵、维度评分、风险与建议 |
 
-`templates/` 提供可直接填写的工作模板，`examples/` 展示从输入到处理再到输出的完整案例。
+[`templates/`](templates/) 提供可直接填写的工作模板，[`examples/`](examples/) 展示从输入到处理再到输出的完整案例。
 
 ## 安装方式
 
@@ -50,11 +71,11 @@
 git clone https://github.com/rongyiburongyi1023-hash/hr-recruitment-analyzer-skill.git
 ```
 
-将克隆后的目录放入 AI Agent 可读取的工作区或 Skill 目录。不同 Agent 产品的技能目录和加载方式可能不同，请以对应产品说明为准。
+将克隆后的目录放入 AI Agent 可读取的工作区或 Skill 目录，并以根目录的 [`SKILL.md`](SKILL.md) 作为入口。不同 Agent 产品的技能目录和加载方式可能不同，请以对应产品说明为准。
 
 ### 方式二：下载后使用
 
-从 GitHub 下载仓库压缩包并解压，保持 `SKILL.md`、`prompts/`、`templates/` 和 `examples/` 的相对目录结构不变。不需要安装依赖，也不需要运行服务。
+从 GitHub 下载仓库压缩包并解压，保持 [`SKILL.md`](SKILL.md)、[`prompts/`](prompts/)、[`templates/`](templates/) 和 [`examples/`](examples/) 的相对目录结构不变。不需要安装依赖，也不需要运行服务。
 
 ## 使用方法
 
@@ -99,6 +120,7 @@ hr-recruitment-analyzer-skill/
 ├── README.md
 ├── SKILL.md
 ├── LICENSE
+├── CONTRIBUTING.md
 ├── prompts/
 │   ├── job_analysis.md
 │   ├── jd_optimizer.md
@@ -125,6 +147,10 @@ hr-recruitment-analyzer-skill/
 ## 使用边界
 
 本项目提供招聘分析框架，不替代组织决策、劳动法律意见、背景调查或人工面试。涉及个人信息时应遵循适用法律及组织的数据治理要求；不得根据与岗位无关的敏感属性作出评价。
+
+## 参与贡献
+
+欢迎提交经过匿名化处理的岗位案例、专业 Prompt 改进和 HR 工作模板。提交前请阅读 [贡献指南](CONTRIBUTING.md)。
 
 ## 开源协议
 
